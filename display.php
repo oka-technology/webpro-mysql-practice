@@ -7,6 +7,9 @@ try  {
   $stmt_books = $dbh->query('SELECT * FROM books');
   $stmt_categ = $dbh->query('SELECT * FROM categories');
   $stmt_author = $dbh->query('SELECT * FROM authors');
+  $stmt_tags = $dbh->query('SELECT * FROM tags');
+  $stmt_books_tags = $dbh->query('SELECT * FROM books_tags');
+  $tag_values = array();
 ?>
 
 <!DOCTYPE html>
@@ -39,13 +42,27 @@ try  {
           break;
         }
       }
+      while($row_books_tags = $stmt_books_tags->fetch(PDO::FETCH_ASSOC)) {
+        if($row_books_tags['books_id'] == $row_books['id']){
+          while($row_tags = $stmt_tags->fetch(PDO::FETCH_ASSOC)){
+            if($row_tags['id'] == $row_books_tags['tags_id']){
+              $tag_values[] = $row_tags['name'];
+              break;
+            }
+          }
+        }
+      }
     ?>
     <tr>
       <td><?=$category_value?></td>
-      <td><?=$row_books['name']?></br>(<?=$row_books['isbn']?>)</td>
+      <td><?=$row_books['name']?><br />(<?=$row_books['isbn']?>)</td>
       <td><?=$author_value?></td>
-      <td><?=$row_books['price']?></br>円</td>
-      <td></td>
+      <td><?=$row_books['price']?><br />円</td>
+      <td>
+      <?php foreach ($tag_values as $tag_value) {?>
+        <p><?=$tag_value?></p>          
+      <?php }?>
+      </td>
     </tr>
     <?php } ?>
     </table>
