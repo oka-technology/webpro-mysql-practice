@@ -7,12 +7,12 @@
     );
 
     $stmt = $dbh->prepare (
-      'INSERT INTO books (isbn, name, price, category_id, author_id) VALUES (?, ?, ?, ?, ?)'
+      'INSERT INTO books (isbn, name, price, category_id, author_id) VALUES (?,?,?,?,?)'
     );
     $stmt->execute(array($_POST['isbn'], $_POST['name'], $_POST['price'], $_POST['category'], $_POST['author']));
 
     $stmt = $dbh->query('SELECT max(id) FROM books');
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);    
     $max_id = $row['max(id)'];
     $tags = $_POST['tags'];
     foreach ($tags as $tag){
@@ -26,5 +26,5 @@
     var_dump($e);
     exit;
   }
-  header( "Location: display.php" ) ;
+  header( "Location: display.php") ;
 	exit ;
