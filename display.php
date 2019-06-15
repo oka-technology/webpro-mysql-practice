@@ -9,7 +9,21 @@ try  {
   $stmt_author = $dbh->query('SELECT * FROM authors');
   $stmt_tags = $dbh->query('SELECT * FROM tags');
   $stmt_books_tags = $dbh->query('SELECT * FROM books_tags');
-  $tag_values = array();
+  while($tmp = $stmt_books->fetch(PDO::FETCH_ASSOC)){
+    $rows_books[] =$tmp;
+  }
+  while($tmp = $stmt_categ->fetch(PDO::FETCH_ASSOC)){
+    $rows_categ[] =$tmp;
+  }
+  while($tmp = $stmt_author->fetch(PDO::FETCH_ASSOC)){
+    $rows_author[] =$tmp;
+  }
+  while($tmp = $stmt_books_tags->fetch(PDO::FETCH_ASSOC)){
+    $rows_books_tags[] =$tmp;
+  }
+  while($tmp = $stmt_tags->fetch(PDO::FETCH_ASSOC)){
+    $rows_tags[] =$tmp;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -29,22 +43,22 @@ try  {
       <th>タグ</th>
     </tr>
     <?php 
-    while ($row_books = $stmt_books->fetch(PDO::FETCH_ASSOC)) {
-      while($row_categ = $stmt_categ->fetch(PDO::FETCH_ASSOC)) {
+    foreach ($rows_books as $row_books){
+      foreach ($rows_categ as $row_categ) {
         if($row_categ['id'] == $row_books['category_id']){
           $category_value = $row_categ['name'];
           break;
         }
       }
-      while($row_author = $stmt_author->fetch(PDO::FETCH_ASSOC)) {
+      foreach ($rows_author as $row_author) {
         if($row_author['id'] == $row_books['author_id']){
           $author_value = $row_author['name'];
           break;
         }
       }
-      while($row_books_tags = $stmt_books_tags->fetch(PDO::FETCH_ASSOC)) {
+      foreach ($rows_books_tags as $row_books_tags) {
         if($row_books_tags['books_id'] == $row_books['id']){
-          while($row_tags = $stmt_tags->fetch(PDO::FETCH_ASSOC)){
+          foreach ($rows_tags as $row_tags){
             if($row_tags['id'] == $row_books_tags['tags_id']){
               $tag_values[] = $row_tags['name'];
               break;
@@ -60,8 +74,11 @@ try  {
       <td><?=$row_books['price']?><br />円</td>
       <td>
       <?php foreach ($tag_values as $tag_value) {?>
-        <p><?=$tag_value?></p>          
-      <?php }?>
+        <p><?=$tag_value?></p>
+      <?php 
+        }
+        $tag_values = array();
+      ?>
       </td>
     </tr>
     <?php } ?>
