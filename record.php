@@ -5,6 +5,9 @@
       'user',
       'password'
     );
+    $stmt = $dbh->query('SELECT max(id) FROM books');
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $max_id_old = $row['max(id)'];
 
     $stmt = $dbh->prepare (
       'INSERT INTO books (isbn, name, price, category_id, author_id) VALUES (?,?,?,?,?)'
@@ -13,13 +16,15 @@
 
     $stmt = $dbh->query('SELECT max(id) FROM books');
     $row = $stmt->fetch(PDO::FETCH_ASSOC);    
-    $max_id = $row['max(id)'];
-    $tags = $_POST['tags'];
-    foreach ($tags as $tag){
-      $stmt = $dbh->prepare (
-      'INSERT INTO books_tags (books_id, tags_id) VALUES (?, ?)'
-      );
-      $stmt->execute(array($max_id, $tag));
+    $max_id_new = $row['max(id)'];
+    if ($max_id_new !== $max_id_old || $max_id_new == 1){
+      $tags = $_POST['tags'];
+      foreach ($tags as $tag){
+        $stmt = $dbh->prepare (
+        'INSERT INTO books_tags (books_id, tags_id) VALUES (?, ?)'
+        );
+        $stmt->execute(array($max_id_new, $tag));
+      }
     }
 
   } catch (PDOException $e) {
