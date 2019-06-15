@@ -9,6 +9,7 @@ try  {
   $stmt_author = $dbh->query('SELECT * FROM authors');
   $stmt_tags = $dbh->query('SELECT * FROM tags');
   $stmt_books_tags = $dbh->query('SELECT * FROM books_tags');
+  $rows_books = array();
   while($tmp = $stmt_books->fetch(PDO::FETCH_ASSOC)){
     $rows_books[] =$tmp;
   }
