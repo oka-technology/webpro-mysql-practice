@@ -21,7 +21,7 @@ create table books_tags(
 
 create table books(
   id int auto_increment not null primary key,
-  isbn int(13) not null,
+  isbn bigint(13) unique not null,
   name varchar(255) not null,
   price int not null,
   category_id int not null,
