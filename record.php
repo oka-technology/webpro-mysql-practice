@@ -17,7 +17,7 @@
     $stmt = $dbh->query('SELECT max(id) FROM books');
     $row = $stmt->fetch(PDO::FETCH_ASSOC);    
     $max_id_new = $row['max(id)'];
-    if ($max_id_new !== $max_id_old || $max_id_new == 1){
+    if ($max_id_new !== $max_id_old){
       $tags = $_POST['tags'];
       foreach ($tags as $tag){
         $stmt = $dbh->prepare (
